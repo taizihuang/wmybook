@@ -2,5 +2,6 @@
 
 
 ### v0.1.0
-说明: 暂无
+
+下载地址：https://github.com/taizihuang/wmybook/releases/tag/v0.1.0
 
