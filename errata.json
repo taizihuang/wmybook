@@ -1,0 +1,45 @@
+{
+    "post": {
+        "175790558": [
+            "(r'https://www.bing.com/ck/a\\?!\\\\&\\\\&p=4e27129de8f0dcc45ca9fa3218bf41726eb12ca6e60f67d64c5c9168a209d247JmltdHM9MTY1NDkyNTY4NyZpZ3VpZD0yODRjYzdkMy1jZTg5LTQ5NmEtOTA4Ny0xYTUzM2RiYTkyZDQmaW5zaWQ9NTM1MQ\\\\&ptn=3\\\\&fclid=34ce5379-e948-11ec-93ce-387136beeb2a\\\\&u=a1aHR0cHM6Ly9qdW5rc2NpZW5jZS5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMDQvSlBNb3JnYW4tRGlzbmV5LUJsYWNrcm9jay1CdXktTmF0dXJlLUNvbnNlcnZhbmN5cy1Vc2VsZXNzLUNhcmJvbi1PZmZzZXRzLnBkZg\\\\&ntb=F', r'https://junkscience.com/wp-content/uploads/2021/04/JPMorgan-Disney-Blackrock-Buy-Nature-Conservancys-Useless-Carbon-Offsets.pdf')",
+            "(r'<em>', '')",
+            "(r'</em>', '')"
+        ],
+        "171980706": [
+            "(r'正式終結}}}', r'正式終結}')"
+        ],
+        "142302095": [
+            "(r'<table .*?>((\\\n|.)*)<\\\/table>', r'\\\\begin{figure}[h]\\\\centering\\\\includegraphics[width = 1\\\\linewidth]{./img/table.png}\\\\end{figure}')"
+        ],
+        "138538769": [
+            "(r'P<sub>R</sub>(V)', r'$P^R(V)$')"
+        ],
+        "131486362": [
+            "(r'\\\\href{https://www.youtube.com/watch\\?v=PlaMQBEg-9M\\\\&list=WL\\\\&index=9\\\\&t=1822s\" style=\"font-size:11.5pt;letter-spacing:0.75pt\" target=\"\\\\_blank}{链接\\\\footnote{\\\\url{https://www.youtube.com/watch\\?v=PlaMQBEg-9M\\\\&list=WL\\\\&index=9\\\\&t=1822s\" style=\"font-size:11.5pt;letter-spacing:0.75pt\" target=\"\\\\_blank}}}</a>',r'')"
+        ],
+        "129879105": [
+            "(r'p=\"\">', r'')"
+        ],
+        "108908826": [
+            "('5d9478403b1a5b12c09b10aaadcdcdcb','empty')"
+        ],
+        "111444506": [
+            "(r'\" title=\"這裏', '')",
+            "(r'https://www.huffingtonpost.com/entry/trump-trade-war\\\\_us\\\\_5ac53929e4b09ef3b2432f64\\\\href', r'\\\\href')",
+            "(r'</a>', '')"
+        ],
+        "108908613": [
+            "('5d9478403b1a5b12c09b10aaadcdcdcb','empty')",
+            "(r'<div.*?>', '\\n')",
+            "(r'</div>', '\\n')",
+            "(r'<div .*?>', '\\n')",
+            "(r'<h2>', '\\n')",
+            "(r'</h2>', '\\n')"
+        ],
+        "108908624": [
+            "(r'<strong>', '')",
+            "(r'</strong>', '')"
+        ]
+    }
+    
+}
