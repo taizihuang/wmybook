@@ -5,7 +5,7 @@ import pandas as pd
 
 data_dir = './data'
 
-with open("suffix", "r") as f:
+with open("version", "r") as f:
     suffix = f.read().replace("\n","")
 
 # 龙行天下
@@ -28,8 +28,8 @@ for i in doc.findAll("div", {'data-target':"doc"}):
 
 df = pd.DataFrame(data=data_list, columns=["filename", "id"]) 
 df = df.loc[df.filename.str.contains('八方论坛|龙行天下|讲座')]
-df.to_pickle(f'{data_dir}/transcript_info{suffix}.pkl')
+df.to_pickle(f'{data_dir}/transcript_info_{suffix}.pkl')
 print(f"{len(df)} items in total")
 
 url_list = [f'https://docs.google.com/document/d/{id}/edit' for id in df['id']]
-Downloader(url_list, nCache=2, outFilename=f'{data_dir}/transcript{suffix}.pkl').run()
+Downloader(url_list, nCache=2, outFilename=f'{data_dir}/transcript_{suffix}.pkl').run()
