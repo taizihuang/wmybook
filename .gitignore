@@ -1,2 +1,8 @@
 data/
 releases/
+*.log
+*.toc
+*.aux
+*.out
+*.pdf
+*.tex
