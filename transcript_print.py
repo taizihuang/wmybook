@@ -1,52 +1,8 @@
 import pandas as pd
 import json
 
-def extract(response):
-    doc = response.decode('utf8') 
-
-    string_left = 'DOCS_modelChunk = [{'
-    string_right = '},{"'
-    text = ''
-    while string_left in doc:
-        loc1 = doc.index(string_left)
-        loc2 = doc[loc1:].index(string_right)
-        doc_dict = json.loads(doc[loc1+18:loc1+loc2] + '}]')
-        loc_idx = 0
-        if 's' not in doc_dict[0]:
-            loc3 = doc[loc1+loc2+2:].index(string_right)
-            doc_dict = json.loads(doc[loc1+18:loc1+loc2+2+loc3] + '}]')
-            loc_idx = 1
-            if 's' not in doc_dict[1]:
-                loc4 = doc[loc1+loc2+2+loc3+2:].index(string_right)
-                doc_dict = json.loads(doc[loc1+18:loc1+loc2+loc3+2+loc4+2] + '}]')
-                loc_idx = 2
-        text += doc_dict[loc_idx]['s']
-        doc = doc[loc1+loc2+2:]
-    return text
-
-data_dir = './data'
-
 with open("version", "r") as f:
     version = f.read().replace("\n","")
-df = pd.read_pickle(f'{data_dir}/transcript_{version}.pkl')
-df_info = pd.read_pickle(f'{data_dir}/transcript_info_{version}.pkl')
-
-filename = df_info['filename'].iloc[0]
-if '已隱藏' in filename:
-    key = '已隱藏'
-elif 'オーナー' in filename:
-    key = 'オーナー'
-elif '已隐藏' in filename:
-    key = '已隐藏'
-else:
-    key = ''
-
-df['id'] = df['url'].map(lambda x: x.split('/')[-2])
-df_merge = pd.merge(df, df_info, on='id')
-df_merge['title'] = df_merge['filename'].map(lambda x: x.split(key)[0].split(']')[-1].replace('✅','').replace('.docx',''))
-df_merge['art_date'] = df_merge['filename'].map(lambda x: '20'+ x.split(key)[0].split('[')[0])
-df_merge['text'] = df_merge['response'].map(extract)
-df_merge = df_merge.sort_values('art_date',ascending=True)
 
 content = """
 \\documentclass[twocolumn]{ctexart}
@@ -85,20 +41,64 @@ content += """)\\end{center}\\end{titlepage}\\newpage
 rep_list = [('&lt;','<'), ('&gt;','>'), ('&amp;','&'),
 ('<p>','\n'), ('</p>','\n'), ('<br>','\n'),('<br/>','\n'),
 ('%','\\%'), ('$','\\$'), ('&','\\&'),('#','\\#'), ('^','\\^'), ('_','\\_'), ('===','='),
-('<strike>','\\cancel{'), ('</strike>','}')]
+('<h2>','\\section{\\ \\ \\ \\ '), ('</h2>','\\ \\ \\ \\ }'), ('≈', '$\\approx$')]
 
-for idx in df_merge.index:
-    id = df_merge.loc[idx, 'id']
-    url = f'https://docs.google.com/document/d/{id}/edit' 
-    title_str = df_merge.loc[idx,'title'].replace(' ','、').replace('&', '\\&')
+def extract(response):
+    doc = response.decode("utf8")
+    string_left = '"chunk":[{'
+    string_right = '},{'
+    len_left = len(string_left)-2
+    text = ''
+    while string_left in doc:
+        loc1 = doc.index(string_left)
+        loc2 = doc[loc1:].index(string_right)
+        doc_dict = json.loads(doc[loc1+len_left:loc1+loc2] + '}]')
+        loc_idx = 0
+        if 's' not in doc_dict[0]:
+            loc3 = doc[loc1+loc2+2:].index(string_right)
+            doc_dict = json.loads(doc[loc1+len_left:loc1+loc2+2+loc3] + '}]')
+            loc_idx = 1
+            if 's' not in doc_dict[1]:
+                loc4 = doc[loc1+loc2+2+loc3+2:].index(string_right)
+                doc_dict = json.loads(doc[loc1+len_left:loc1+loc2+loc3+2+loc4+2] + '}]')
+                loc_idx = 2
+        text += doc_dict[loc_idx]['s']
+        doc = doc[loc1+loc2+2:]
+    return text
+
+data_dir = './data'
+
+df = pd.read_pickle(f'{data_dir}/transcript_data.pkl')
+with open(f"{data_dir}/transcript_info.json", "r") as f:
+    info_dict = json.loads(f.read())
+id_dict = {}
+for key in info_dict.keys():
+    id = info_dict[key]["id"]
+    name = info_dict[key]["name"]
+    id_dict[id] = name
+
+
+df['id'] = df['url'].map(lambda x: x.split('/')[-2])
+df["fullname"] = df["id"].map(id_dict)
+df['title'] = df['fullname'].map(lambda x: x.split("]")[-1])
+df['art_date'] = df['fullname'].map(lambda x: x.split("[")[0])
+df['art_date'] = df['art_date'].map(lambda x: f"20{x[:2]}/{x[2:4]}/{x[4:6]}")
+df['text'] = df['response'].map(extract)
+df = df.sort_values('art_date', ascending=True)
+
+for idx in df.index:
+    id = df.loc[idx, 'id']
+    fullname = df.loc[idx, "fullname"]
+    title_str = df.loc[idx,'title']
+    date = df.loc[idx, 'art_date']
+    text = df.loc[idx, 'text']
+    url = f'https://wmyblog.site/html/{fullname[:12]}.html' 
     title = f"\\href{{{url}}}{{{title_str}}}"
-    date = df_merge.loc[idx,'art_date']
-    text = df_merge.loc[idx,'text']
     for rep in rep_list:
         text = text.replace(*rep)
     
     content += f"\\twocolumn[\\begin{{@twocolumnfalse}}\n\\section{{{title}}}\n\\subsection{{{date}}}\n\\end{{@twocolumnfalse}}]"
-    content += text.replace('\n','\n\n').replace('','').replace('Putin}','Putin').replace('\源源','/源源')
+    content += text.replace('\n','\n\n')
     content
 
 content += '\n \\end{document}'

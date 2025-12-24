@@ -15,7 +15,7 @@ class Book:
             ('&rdquo;','"'), ('&ldquo;','"'),('&middot;','·'),('&mdash;','-'),
             ('<p>','\n'), ('</p>','\n'), ('<br>','\n'),('<br/>','\n'),
             ('%','\\%'), ('$','\\$'), ('&','\\&'),('#','\\#'), ('^','\\^'), ('_','\\_'), ('===','='),
-            ('<strike>','\\cancel{'), ('</strike>','}'),
+            ('<strike>',''), ('</strike>',''),
             #math
             ('σ','$\\sigma$'), ('θ','$\\theta$'), ('r\\^2','$r^2$'), ('λ','$\\lambda$'),
             ('π','$\\pi$'), ('r\\^4','$r^4$'), ('∝','$\\propto$'), ('ρ','$\\rho$'),
@@ -137,7 +137,7 @@ class Book:
 
     def formatComment(self, art_id):
         df = self.comment.loc[self.comment.id == art_id].sort_values('comment_date',ascending=True).reset_index(drop=True)
-        df = df.loc[~(df.comment.str.contains('<strike'))]
+        df = df.loc[~((df["comment"].str.contains("<strike")) & (df["reply"] == ""))]
 
         content = f'\\section{{{len(df)}条问答}}\n\n'
 
